@@ -1,0 +1,25 @@
+# OS generated files #
+######################
+.DS_Store?
+ehthumbs.db
+Icon?
+Thumbs.db
+
+# VS generated files #
+######################
+*.user
+*.suo
+*/bin
+*/obj
+_ReSharper*
+*resharper*
+
+
+# Output             #
+######################
+bin
+
+obj
+
+*.cache
+
