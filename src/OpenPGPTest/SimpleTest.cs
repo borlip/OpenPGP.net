@@ -1,4 +1,5 @@
-﻿using MbUnit.Framework;
+﻿using System;
+using MbUnit.Framework;
 
 namespace OpenPGPTest
 {
@@ -8,9 +9,6 @@ namespace OpenPGPTest
         [Test]
         public void Test()
         {
-            //
-            // TODO: Add test logic here
-            //
         }
     }
 }
