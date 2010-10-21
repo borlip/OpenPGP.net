@@ -51,6 +51,9 @@
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
     <Compile Include="Core\BigEndianBitConverter.cs" />
+    <Compile Include="Core\KeyIdentifier.cs" />
+    <Compile Include="Core\MultiPrecisionInteger.cs" />
+    <Compile Include="Core\PGPTime.cs" />
     <Compile Include="Simple.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
