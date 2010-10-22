@@ -1,6 +1,7 @@
 ﻿using System;
 using MbUnit.Framework;
 using OpenPGP.Core;
+using OpenPGPTestingHelpers;
 
 namespace OpenPGPTest.Core
 {

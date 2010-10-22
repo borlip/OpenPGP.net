@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using MbUnit.Framework;
 
-namespace OpenPGPTest
+namespace OpenPGPTestingHelpers
 {
     /// <summary>
     /// Creates extension methods that make it easier to write assertions.
