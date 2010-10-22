@@ -5,6 +5,7 @@ namespace OpenPGP.Core
     /// <summary>
     /// A timestamp as defined in RFC 4880 at http://tools.ietf.org/html/rfc4880#section-3.5
     /// </summary>
+    [CLSCompliant(false)]
     public class PGPTime
     {
         private static DateTime _OriginTime = new DateTime(1970, 1, 1);
