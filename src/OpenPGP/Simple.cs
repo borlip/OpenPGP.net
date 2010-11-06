@@ -83,7 +83,7 @@ namespace OpenPGP
 
         public static void Decrypt(
                 Stream sourceStream,
-                Stream destinationstream,
+                Stream destinationStream,
                 string passphrase
             )
         {

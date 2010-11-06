@@ -7,15 +7,36 @@ namespace OpenPGP.Core
     /// </summary>
     public static class BigEndianBitConverter
     {
+        private static void ValidateInput(byte[] value, int startIndex, int bytesRequired)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException("value");
+            }
+            if (startIndex < 0 || startIndex > value.Length - 1)
+            {
+                throw new ArgumentOutOfRangeException(
+                    "startIndex", 
+                    "Index was out of range. Must be non-negative and less than the size of the array.");
+            }
+            if (startIndex >= value.Length - bytesRequired + 1)
+            {
+                throw new ArgumentException(
+                    "There are not enough elements in the array. Check the value of startIndex.", 
+                    "startIndex");
+            }
+        }
+
         /// <summary>
         /// Returns a 16-bit unsigned integer converted from two bytes at a specified position in a byte array.
         /// </summary>
         /// <param name="value">The array of bytes.</param>
         /// <param name="startIndex">The starting position within <paramref name="value" />.</param>
         /// <returns>A 32-bit unsigned integer formed by four bytes beginning at <paramref name="startIndex" />.</returns>
-        [CLSCompliant(false)]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2233:OperationsShouldNotOverflow", MessageId = "startIndex+1"), CLSCompliant(false)]
         public static ushort ToUInt16(byte[] value, int startIndex)
         {
+            ValidateInput(value, startIndex, 2);
             return (ushort) (value[startIndex] << 8 | value[startIndex + 1]);
         }
 
@@ -25,9 +46,10 @@ namespace OpenPGP.Core
         /// <param name="value">The array of bytes.</param>
         /// <param name="startIndex">The starting position within <paramref name="value" />.</param>
         /// <returns>A 32-bit unsigned integer formed by four bytes beginning at <paramref name="startIndex" />.</returns>
-        [CLSCompliant(false)]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2233:OperationsShouldNotOverflow", MessageId = "startIndex+1"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2233:OperationsShouldNotOverflow", MessageId = "startIndex+2"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2233:OperationsShouldNotOverflow", MessageId = "startIndex+3"), CLSCompliant(false)]
         public static uint ToUInt32(byte[] value, int startIndex)
         {
+            ValidateInput(value, startIndex, 4);
             return (uint)
                 (value[startIndex] << 24 | 
                  value[startIndex+1] << 16 | 
@@ -41,9 +63,10 @@ namespace OpenPGP.Core
         /// <param name="value">The array of bytes.</param>
         /// <param name="startIndex">The starting position within <paramref name="value" />.</param>
         /// <returns>A 64-bit unsigned integer formed by four bytes beginning at <paramref name="startIndex" />.</returns>
-        [CLSCompliant(false)]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2233:OperationsShouldNotOverflow", MessageId = "startIndex+4"), CLSCompliant(false)]
         public static ulong ToUInt64(byte[] value, int startIndex)
         {
+            ValidateInput(value, startIndex, 8);
             return 
                 ((ulong)ToUInt32(value, startIndex) << 32 | ToUInt32(value, startIndex + 4));
         }

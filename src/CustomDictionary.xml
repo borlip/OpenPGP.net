@@ -29,6 +29,14 @@
     </Acronyms>
     -->
 
+    <Words>
+        <Recognized>
+            <Word>crc</Word>
+        </Recognized>
+        <Compound>
+        </Compound>
+    </Words>
+
     <Acronyms>
         <CasingExceptions>
             <Acronym>PGP</Acronym>
