@@ -60,16 +60,6 @@ namespace OpenPGP
         public static void Decrypt(
             string sourceFileName, 
             string destinationFileName, 
-            string privateKeyRingFileName, 
-            string privateKeyIdentifier, 
-            string privateKeyPassphrase)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static void Decrypt(
-            string sourceFileName, 
-            string destinationFileName, 
             string passphrase)
         {
             using (var source = new FileStream(sourceFileName, FileMode.Open, FileAccess.Read, FileShare.Read))
@@ -90,6 +80,15 @@ namespace OpenPGP
             throw new NotImplementedException();
         }
 
+        [CLSCompliant(false)]
+        public static void Decrypt(
+            string sourceFileName, 
+            string destinationFileName, 
+            ISimpleDecryptionHelper helper)
+        {
+            throw new NotImplementedException();
+        }
+
         public static bool Verify(
             string sourceFileName, 
             string destinationFileName, 
@@ -103,17 +102,6 @@ namespace OpenPGP
             string signatureFileName,
             string publicKeyRingFileName
             )
-        {
-            throw new NotImplementedException();
-        }
-
-        public static bool DecryptAndVerify(
-            string sourceFileName, 
-            string destinationFileName, 
-            string publicKeyRingFileName, 
-            string privateKeyRingFileName, 
-            string privateKeyIdentifier, 
-            string privateKeyPassphrase)
         {
             throw new NotImplementedException();
         }
