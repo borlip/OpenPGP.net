@@ -54,7 +54,11 @@
     <Compile Include="Core\Crc24Computer.cs" />
     <Compile Include="Core\KeyIdentifier.cs" />
     <Compile Include="Core\MultiPrecisionInteger.cs" />
+    <Compile Include="Core\PacketTypes.cs" />
     <Compile Include="Core\PGPTime.cs" />
+    <Compile Include="DecryptResult.cs" />
+    <Compile Include="ISimpleDecryptionHelper.cs" />
+    <Compile Include="Security\Cryptography\Camellia.cs" />
     <Compile Include="Simple.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
