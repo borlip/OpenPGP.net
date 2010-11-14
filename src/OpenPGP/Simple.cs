@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using OpenPGP.Core;
 
 namespace OpenPGP
 {
@@ -84,7 +85,7 @@ namespace OpenPGP
         public static void Decrypt(
             string sourceFileName, 
             string destinationFileName, 
-            ISimpleDecryptionHelper helper)
+            IDecryptionSecretDataProvider helper)
         {
             throw new NotImplementedException();
         }

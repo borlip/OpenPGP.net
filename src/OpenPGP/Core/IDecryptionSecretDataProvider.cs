@@ -1,13 +1,12 @@
 ﻿using System;
-using OpenPGP.Core;
 
-namespace OpenPGP
+namespace OpenPGP.Core
 {
     /// <summary>
-    /// Provides helper functions to the <see cref="Simple" /> class.
+    /// Provides secret data to a decryption operation.
     /// </summary>
     [CLSCompliant(false)]
-    public interface ISimpleDecryptionHelper
+    public interface IDecryptionSecretDataProvider
     {
         string GetSymmetricDecryptionPassphrase();
         string GetPassphraseForPrivateKey(KeyIdentifier keyIdentifier);
