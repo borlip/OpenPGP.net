@@ -58,8 +58,8 @@
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
     <Compile Include="Core\BigEndianBitConverterTest.cs" />
-    <Compile Include="Core\PGPTimeTest.cs" />
     <Compile Include="Core\Crc24ComputerTest.cs" />
+    <Compile Include="PGPTimeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

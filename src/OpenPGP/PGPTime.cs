@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OpenPGP.Core
+namespace OpenPGP
 {
     /// <summary>
     /// A timestamp as defined in RFC 4880 at http://tools.ietf.org/html/rfc4880#section-3.5

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OpenPGP.Core
+namespace OpenPGP
 {
     /// <summary>
     /// Provides secret data to a decryption operation.

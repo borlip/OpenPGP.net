@@ -1,9 +1,9 @@
 ﻿using System;
 using MbUnit.Framework;
-using OpenPGP.Core;
+using OpenPGP;
 using OpenPGPTestingHelpers;
 
-namespace OpenPGPTest.Core
+namespace OpenPGPTest
 {
     [TestFixture]
     public class PGPTimeTest
