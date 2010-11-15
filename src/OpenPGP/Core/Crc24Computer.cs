@@ -10,6 +10,11 @@ namespace OpenPGP.Core
         private const long Initialization = 0xB704CEL;
         private const long Generator = 0x1864CFBL;
 
+        /// <summary>
+        /// Compute the CRC of a block of data.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public static long ComputeCrc(byte[] data)
         {
             if (data == null)

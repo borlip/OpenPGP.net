@@ -50,6 +50,7 @@
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
+    <Compile Include="ArmorType.cs" />
     <Compile Include="Core\BigEndianBitConverter.cs" />
     <Compile Include="Core\Crc24Computer.cs" />
     <Compile Include="Core\MultiPrecisionInteger.cs" />

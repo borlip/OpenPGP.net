@@ -79,7 +79,7 @@ namespace OpenPGP.Core
         [CLSCompliant(false)]
         public static byte[] GetBytes(ushort value)
         {
-            return new byte[]
+            return new[]
                        {
                            (byte) (value >> 8),
                            (byte) (value & 0x00FF)
@@ -94,7 +94,7 @@ namespace OpenPGP.Core
         [CLSCompliant(false)]
         public static byte[] GetBytes(uint value)
         {
-            return new byte[]
+            return new[]
                        {
                            (byte) (value >> 24),
                            (byte) ((value & 0x00FF0000) >> 16),
