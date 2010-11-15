@@ -51,13 +51,29 @@
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
+    <Compile Include="MockSecretDataProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SimpleTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenPGPTestingHelpers\OpenPGPTestingHelpers.csproj">
       <Project>{AF6F9B54-67E3-4E7D-AF60-E40E6494B864}</Project>
       <Name>OpenPGPTestingHelpers</Name>
     </ProjectReference>
+    <ProjectReference Include="..\OpenPGP\OpenPGP.csproj">
+      <Project>{36328A92-8BCF-4C21-9AE5-C9978A69531C}</Project>
+      <Name>OpenPGP</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\ArmoredSymmetric01.txt.asc" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\BinarySymmetric01.txt.gpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TestData\Passphrases.txt" />
+    <EmbeddedResource Include="TestData\Plaintext001.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
