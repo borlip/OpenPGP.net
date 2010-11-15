@@ -7,15 +7,16 @@ namespace OpenPGP.Core
     /// </summary>
     public static class Crc24Computer
     {
-        private const long Initialization = 0xB704CEL;
+        private const long InitialValue = 0xB704CEL;
         private const long Generator = 0x1864CFBL;
 
         /// <summary>
         /// Compute the CRC of a block of data.
         /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        public static long ComputeCrc(byte[] data)
+        /// <param name="data">The data to compute the CRC for.</param>
+        /// <param name="initialValue">The initial value of the CRC.</param>
+        /// <returns>The 24-bit CRC of the <paramref name="data"/>.</returns>
+        public static long ComputeCrc(byte[] data, long initialValue = InitialValue)
         {
             if (data == null)
             {
@@ -26,7 +27,7 @@ namespace OpenPGP.Core
                 return 0;
             }
 
-            var crc = Initialization;
+            var crc = initialValue;
             foreach (var t in data)
             {
                 crc ^= t << 16;
