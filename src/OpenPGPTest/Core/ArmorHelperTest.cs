@@ -1,14 +1,13 @@
-﻿using MbUnit.Framework;
-using OpenPGP.Core;
+﻿using OpenPGP.Core;
 using OpenPGPTestingHelpers;
+using Xunit.Extensions;
 
 namespace OpenPGPTest.Core
 {
-    [TestFixture]
     public class ArmorHelperTest : BaseFixture
     {
-        [Test]
-        [Row("ArmoredSymmetric01.txt.asc")] 
+        [Theory]
+        [InlineData("ArmoredSymmetric01.txt.asc")] 
         public void IsAsciiArmoredShouldReturnTrueIfDataIsAsciiArmored(string resourceName)
         {
             using (var stream = GetTestDataAsStream(resourceName))
@@ -17,8 +16,8 @@ namespace OpenPGPTest.Core
             }
         }
 
-        [Test]
-        [Row("BinarySymmetric01.txt.gpg")]
+        [Theory]
+        [InlineData("BinarySymmetric01.txt.gpg")]
         public void IsAsciiArmoredShouldReturnFalseIfDataIsNotAsciiArmored(string resourceName)
         {
             using (var stream = GetTestDataAsStream(resourceName))
