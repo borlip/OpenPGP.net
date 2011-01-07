@@ -57,7 +57,9 @@
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
+    <Compile Include="Core\ArmorHelperTest.cs" />
     <Compile Include="Core\BigEndianBitConverterTest.cs" />
+    <Compile Include="Core\BinaryStreamSearcherTest.cs" />
     <Compile Include="Core\Crc24ComputerTest.cs" />
     <Compile Include="PGPTimeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -72,9 +74,7 @@
       <Name>OpenPGP</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="IO\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="TestData\Plaintext001.txt" />
   </ItemGroup>
@@ -84,6 +84,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="TestData\Passphrases.txt" />
+    <EmbeddedResource Include="TestData\Plaintext003.txt" />
+    <EmbeddedResource Include="TestData\Plaintext002.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

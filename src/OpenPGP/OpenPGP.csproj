@@ -51,7 +51,11 @@
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
     <Compile Include="ArmorType.cs" />
+    <Compile Include="Core\ArmorHelper.cs" />
+    <Compile Include="Core\AsciiArmorConstants.cs" />
+    <Compile Include="Core\AsciiArmorRemover.cs" />
     <Compile Include="Core\BigEndianBitConverter.cs" />
+    <Compile Include="Core\BinaryStreamSearcher.cs" />
     <Compile Include="Core\Crc24Computer.cs" />
     <Compile Include="Core\MultiPrecisionInteger.cs" />
     <Compile Include="Core\PacketTypes.cs" />
@@ -68,9 +72,7 @@
       <Link>CustomDictionary.xml</Link>
     </CodeAnalysisDictionary>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="IO\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="..\OpenPGP.snk">
       <Link>OpenPGP.snk</Link>
