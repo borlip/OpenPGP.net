@@ -49,5 +49,19 @@ namespace OpenPGPTestingHelpers
                 return result;
             }
         }
+
+        public static Stream GetResourceAsStream(Assembly assembly, string name)
+        {
+            if (assembly == null)
+            {
+                throw new ArgumentNullException("assembly");
+            }
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException("name cannot be null or empty", "name");
+            }
+
+            return assembly.GetManifestResourceStream(name);
+        }
     }
 }
