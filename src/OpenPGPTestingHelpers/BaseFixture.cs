@@ -17,5 +17,17 @@ namespace OpenPGPTestingHelpers
             }
             return stream;
         }
+
+        protected static byte[] GetTestDataAsByteArray(string name)
+        {
+            var asm = Assembly.GetCallingAssembly();
+            var resourceName = string.Format("{0}.TestData.{1}", asm.GetName().Name, name);
+            var stream = ResourceHelper.GetResourceAsByteArray(asm, resourceName);
+            if (stream == null)
+            {
+                throw new InvalidOperationException(string.Format("Could not find {0}", resourceName));
+            }
+            return stream;
+        }
     }
 }

@@ -1,28 +1,35 @@
-﻿using OpenPGP.Core;
+﻿using NUnit.Framework;
+using OpenPGP.Core;
 using OpenPGPTestingHelpers;
-using Xunit.Extensions;
 
 namespace OpenPGPTest.Core
 {
+    [TestFixture]
     public class ArmorHelperTest : BaseFixture
     {
-        [Theory]
-        [InlineData("ArmoredSymmetric01.txt.asc")] 
-        public void IsAsciiArmoredShouldReturnTrueIfDataIsAsciiArmored(string resourceName)
+        [Test]
+        public void IsAsciiArmoredShouldReturnTrueIfDataIsAsciiArmored()
         {
-            using (var stream = GetTestDataAsStream(resourceName))
+            var testResources = new[] {"ArmoredSymmetric01.txt.asc"};
+            foreach (var resourceName in testResources)
             {
-                ArmorHelper.IsAsciiArmored(stream).ShouldBeTrue();
+                using (var stream = GetTestDataAsStream(resourceName))
+                {
+                    ArmorHelper.IsAsciiArmored(stream).ShouldBeTrue();
+                }
             }
         }
 
-        [Theory]
-        [InlineData("BinarySymmetric01.txt.gpg")]
-        public void IsAsciiArmoredShouldReturnFalseIfDataIsNotAsciiArmored(string resourceName)
+        [Test]
+        public void IsAsciiArmoredShouldReturnFalseIfDataIsNotAsciiArmored()
         {
-            using (var stream = GetTestDataAsStream(resourceName))
+            var testResources = new[] { "BinarySymmetric01.txt.gpg" };
+            foreach (var resourceName in testResources)
             {
-                ArmorHelper.IsAsciiArmored(stream).ShouldBeFalse();
+                using (var stream = GetTestDataAsStream(resourceName))
+                {
+                    ArmorHelper.IsAsciiArmored(stream).ShouldBeFalse();
+                }
             }
         }
     }

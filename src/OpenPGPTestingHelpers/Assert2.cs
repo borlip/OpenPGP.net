@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Xunit;
+using NUnit.Framework;
 
 namespace OpenPGPTestingHelpers
 {
@@ -15,13 +15,27 @@ namespace OpenPGPTestingHelpers
             {
                 var haveNextExpected = enumExpected.MoveNext();
                 var haveNextValue = enumValue.MoveNext();
-                Assert.Equal(haveNextExpected, haveNextValue);
+                Assert.AreEqual(haveNextExpected, haveNextValue);
                 if (!haveNextExpected)
                 {
                     break;
                 }
-                Assert.Equal(enumExpected.Current, enumValue.Current);
+                Assert.AreEqual(enumExpected.Current, enumValue.Current);
             }
+        }
+
+        public static void ShouldThrow<T>(Action action) where T : Exception
+        {
+            try
+            {
+                action();
+            }
+            catch (T)
+            {
+                return;
+            }
+
+            Assert.Fail("Expected {0} to be thrown", typeof(T).ToString());
         }
     }
 }

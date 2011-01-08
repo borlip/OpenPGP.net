@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using Xunit;
+using NUnit.Framework;
 
 namespace OpenPGPTestingHelpers
 {
@@ -11,139 +8,90 @@ namespace OpenPGPTestingHelpers
     /// </summary>
     public static class AssertionExtensions
     {
-        public static void ShouldBe<T>(this T item, T expectedValue)
+        public static void ShouldBe<T>(this T item, T expectedValue, string messageFormat = null, params object[] messageArguments)
         {
-            Assert.Equal(expectedValue, item);
+            Assert.AreEqual(expectedValue, item, messageFormat, messageArguments);
         }
 
-        public static void ShouldNotBe<T>(this T item, T expectedValue)
+        public static void ShouldNotBe<T>(this T item, T expectedValue, string messageFormat = null, params object[] messageArguments)
         {
-            Assert.NotEqual(expectedValue, item);
+            Assert.AreNotEqual(expectedValue, item, messageFormat, messageArguments);
         }
 
-        public static void ShouldBeSameReference<T>(this T item, T expectedValue) where T : class
+        public static void ShouldBeSameReference<T>(this T item, T expectedValue, string messageFormat = null, params object[] messageArguments) where T : class
         {
-            Assert.Same(expectedValue, item);
+            Assert.AreSame(expectedValue, item, messageFormat, messageArguments);
         }
 
-        public static void ShouldNotBeSameReference<T>(this T item, T expectedValue) where T : class
+        public static void ShouldNotBeSameReference<T>(this T item, T expectedValue, string messageFormat = null, params object[] messageArguments) where T : class
         {
-            Assert.NotSame(expectedValue, item);
+            Assert.AreNotSame(expectedValue, item, messageFormat, messageArguments);
         }
 
-        public static void ShouldBeTrue(this bool item)
+        public static void ShouldBeTrue(this bool item, string messageFormat = null, params object[] messageArguments)
         {
-            Assert.True(item);
+            Assert.IsTrue(item, messageFormat, messageArguments);
         }
 
-        public static void ShouldBeFalse(this bool item)
+        public static void ShouldBeFalse(this bool item, string messageFormat = null, params object[] messageArguments)
         {
-            Assert.False(item);
+            Assert.IsFalse(item, messageFormat, messageArguments);
         }
 
-        public static void ShouldBeNull(this object item)
+        public static void ShouldBeNull(this object item, string messageFormat = null, params object[] messageArguments)
         {
-            Assert.Null(item);
+            Assert.IsNull(item, messageFormat, messageArguments);
         }
 
-        public static void ShouldNotBeNull(this object item)
+        public static void ShouldNotBeNull(this object item, string messageFormat = null, params object[] messageArguments)
         {
-            Assert.NotNull(item);
+            Assert.IsNotNull(item, messageFormat, messageArguments);
         }
 
-        public static void ShouldContain(this string item, string expectedSubString)
+        public static void ShouldContain(this string item, string expectedSubString, string messageFormat = null, params object[] messageArguments)
         {
-            Assert.Contains(expectedSubString, item);
+            Assert.IsTrue(item.IndexOf(expectedSubString) >= 0, messageFormat, messageArguments);
         }
 
-        public static void ShouldNotContain(this string item, string unexpectedSubString)
+        public static void ShouldNotContain(this string item, string unexpectedSubString, string messageFormat = null, params object[] messageArguments)
         {
-            Assert.DoesNotContain(unexpectedSubString, item);
+            Assert.IsFalse(item.IndexOf(unexpectedSubString) >= 0, messageFormat, messageArguments);
         }
 
-        public static void ShouldBeCaseInsensitive(this string item, string expectedValue)
+        public static void ShouldBeEmpty(this string item, string messageFormat = null, params object[] messageArguments)
         {
-            Assert.Equal(expectedValue, item, new CaseInsensitiveEqualityComparer());
+            Assert.AreEqual("", item, messageFormat, messageArguments);
         }
 
-        public static void ShouldNotBeCaseInsensitive(this string item, string expectedValue)
+        public static void ShouldNotBeEmpty(this string item, string messageFormat = null, params object[] messageArguments)
         {
-            Assert.NotEqual(expectedValue, item, new CaseInsensitiveEqualityComparer());
-        }
-
-        public static void ShouldBeEmpty(this string item)
-        {
-            Assert.Equal("", item);
-        }
-
-        public static void ShouldNotBeEmpty(this string item)
-        {
-            Assert.NotEqual("", item);
+            Assert.AreNotEqual("", item, messageFormat, messageArguments);
         }
 
         public static void ShouldNotBeNullOrEmpty(this string item)
         {
-            Assert.False(string.IsNullOrEmpty(item), "Expected value that is not null and is not empty");
+            Assert.IsFalse(string.IsNullOrEmpty(item), "Expected value that is not null and is not empty");
         }
 
-        public static void ShouldStartWith(this string item, string expectedText)
+        public static void ShouldBeGreaterThan(this IComparable left, IComparable right, string messageFormat = null, params object[] messageArguments)
         {
-            Assert.True(item.StartsWith(expectedText));
+            Assert.Greater(left, right, messageFormat, messageArguments);
         }
 
-        public static void ShouldEndWith(this string item, string expectedText)
+        public static void ShouldBeGreaterThanOrEqualTo(this IComparable left, IComparable right, string messageFormat = null, params object[] messageArguments)
         {
-            Assert.True(item.EndsWith(expectedText));
+            Assert.GreaterOrEqual(left, right, messageFormat, messageArguments);
         }
 
-        public static void ShouldContain<T>(this IEnumerable<T> item, T expectedValue)
+        public static void ShouldBeLessThan(this IComparable left, IComparable right, string messageFormat = null, params object[] messageArguments)
         {
-            Assert.Contains(expectedValue, item);
+            Assert.Less(left, right, messageFormat, messageArguments);
         }
 
-        public static void ShouldNotContain<T>(this IEnumerable<T> item, T expectedValue)
+        public static void ShouldBeLessThanOrEqualTo(this IComparable left, IComparable right, string messageFormat = null, params object[] messageArguments)
         {
-            Assert.DoesNotContain(expectedValue, item);
+            Assert.LessOrEqual(left, right, messageFormat, messageArguments);
         }
 
-        public static void ShouldBeEmpty(this IEnumerable item)
-        {
-            Assert.Empty(item);
-        }
-
-        public static void ShouldNotBeEmpty(this IEnumerable item)
-        {
-            Assert.NotEmpty(item);
-        }
-
-        public static void ShouldBeGreaterThan<T>(this T item, T right) where T : IComparable<T>
-        {
-            Assert.True(item.CompareTo(right) > 0);
-        }
-
-        public static void ShouldBeGreaterThanOrEqualTo<T>(this T item, T right) where T : IComparable<T>
-        {
-            Assert.True(item.CompareTo(right) >= 0);
-        }
-
-        public static void ShouldBeLessThan<T>(this T item, T right) where T : IComparable<T>
-        {
-            Assert.True(item.CompareTo(right) < 0);
-        }
-
-        public static void ShouldBeLessThanOrEqualTo<T>(this T item, T right) where T : IComparable<T>
-        {
-            Assert.True(item.CompareTo(right) <= 0);
-        }
-
-        public static void ShouldBeBetween<T>(this T item, T minimum, T maximum) where T : IComparable
-        {
-            Assert.InRange(item, minimum, maximum);
-        }
-
-        public static void ShouldNotBeBetween<T>(this T item, T minimum, T maximum) where T : IComparable
-        {
-            Assert.NotInRange(item, minimum, maximum);
-        }
     }
 }

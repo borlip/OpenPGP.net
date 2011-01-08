@@ -1,23 +1,26 @@
 ﻿using System.IO;
-using System.Reflection;
+using NUnit.Framework;
 using OpenPGP;
 using OpenPGPTestingHelpers;
-using Xunit;
-using Xunit.Extensions;
 
 namespace OpenPGPIntegrationTest
 {
-    public class SimpleTest
+    [TestFixture]
+    public class SimpleTest : BaseFixture
     {
-        [Theory]
-        [InlineData("BinarySymmetric01.txt.gpg", "Plaintext001.txt", "i have a fever and the only cure is more cowbell")]
-        public void DecryptSymmetric(string ciphertextResourceName, string plaintextResourceName, string passphrase)
+        [Test]
+        public void DecryptSymmetric()
         {
-            var ciphertext = GetNamedResourceAsByteArray(ciphertextResourceName);
+            RunDecryptSymmetric("BinarySymmetric01.txt.gpg", "Plaintext001.txt", "i have a fever and the only cure is more cowbell");
+        }
+
+        private static void RunDecryptSymmetric(string ciphertextResourceName, string plaintextResourceName, string passphrase)
+        {
+            var ciphertext = GetTestDataAsByteArray(ciphertextResourceName);
             ciphertext.ShouldNotBeNull();
             ciphertext.Length.ShouldBeGreaterThan(0);
 
-            var plaintext = GetNamedResourceAsByteArray(plaintextResourceName);
+            var plaintext = GetTestDataAsByteArray(plaintextResourceName);
             plaintext.ShouldNotBeNull();
             plaintext.Length.ShouldBeGreaterThan(0);
 
@@ -26,10 +29,10 @@ namespace OpenPGPIntegrationTest
 
             var result = Simple.Decrypt(cipherStream, outputStream, new MockSecretDataProvider(passphrase));
 
-            result.ShouldNotBeNull();
-            result.IsSuccessful.ShouldBeTrue();
-            result.IsSigned.ShouldBeFalse();
-            result.IsSignatureGood.ShouldBeFalse();
+            result.ShouldNotBeNull("Result of symmetric decryption is null");
+            result.IsSuccessful.ShouldBeTrue("Symmetric decryption failed");
+            result.IsSigned.ShouldBeFalse("Expected no signature, but found one");
+            result.IsSignatureGood.ShouldBeFalse("Expected bad signature, but found good one");
 
             var outputLength = (int)outputStream.Length;
             outputLength.ShouldBe(plaintext.Length);
@@ -38,20 +41,6 @@ namespace OpenPGPIntegrationTest
             outputStream.Read(compare, 0, outputLength);
 
             Assert2.AreElementsEqual(plaintext, compare);
-        }
-
-        private static string GetNamedResourceAsString(string name)
-        {
-            return ResourceHelper.GetResourceAsString(
-                Assembly.GetExecutingAssembly(),
-                "OpenPGPIntegrationTest.TestData." + name);
-        }
-
-        private static byte[] GetNamedResourceAsByteArray(string name)
-        {
-            return ResourceHelper.GetResourceAsByteArray(
-                Assembly.GetExecutingAssembly(),
-                "OpenPGPIntegrationTest.TestData." + name);
         }
     }
 }

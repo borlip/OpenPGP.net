@@ -1,30 +1,34 @@
-﻿using OpenPGP.Core;
+﻿using NUnit.Framework;
+using OpenPGP.Core;
 using OpenPGPTestingHelpers;
-using Xunit.Extensions;
 
 namespace OpenPGPTest.Core
 {
+    [TestFixture]
     public class BinaryStreamSearcherTest : BaseFixture
     {
-        [Theory]
-        [InlineData("this is not")]
-        [InlineData("found in the")]
-        [InlineData("poem text")]
-        public void IndexOfStringShouldReturnNegativeOneIfStringNotFound(string searchString)
+        [Test]
+        public void IndexOfStringShouldReturnNegativeOneIfStringNotFound()
         {
-            using (var stream = GetTestDataAsStream("Plaintext003.txt"))
+            var searchStrings = new[] { "this is not", "found in the", "poem text" };
+            foreach (var searchString in searchStrings)
             {
-                BinaryStreamSearcher.IndexOfString(stream, searchString).ShouldBe(-1);
+                RunIndexOfStringTest("Plaintext003.txt", searchString, -1);
             }
+
         }
 
-        [Theory]
-        [InlineData("Plaintext001.txt", "To be, or not to be", 0)]
-        [InlineData("Plaintext001.txt", "undiscovered country", 1025)]
-        [InlineData("Plaintext001.txt", "name of action.", 1424)]
-        [InlineData("Plaintext002.txt", "silken sad uncertain rustling", 689)]
-        [InlineData("Plaintext003.txt", "no law", 20)]
-        public void IndexOfStringShouldReturnPositionOfString(string resourceName, string searchString, int expectedPosition)
+        [Test]
+        public void IndexOfStringShouldReturnPositionOfString()
+        {
+            RunIndexOfStringTest("Plaintext001.txt", "To be, or not to be", 0);
+            RunIndexOfStringTest("Plaintext001.txt", "undiscovered country", 1025);
+            RunIndexOfStringTest("Plaintext001.txt", "name of action.", 1424);
+            RunIndexOfStringTest("Plaintext002.txt", "silken sad uncertain rustling", 689);
+            RunIndexOfStringTest("Plaintext003.txt", "no law", 20);
+        }
+
+        private static void RunIndexOfStringTest(string resourceName, string searchString, int expectedPosition)
         {
             using (var stream = GetTestDataAsStream(resourceName))
             {
