@@ -9,6 +9,16 @@ namespace OpenPGP.Core
     {
         private const long InitialValue = 0xB704CEL;
         private const long Generator = 0x1864CFBL;
+		
+        /// <summary>
+        /// Compute the CRC of a block of data.
+        /// </summary>
+        /// <param name="data">The data to compute the CRC for.</param>
+        /// <returns>The 24-bit CRC of the <paramref name="data"/>.</returns>
+        public static long ComputeCrc(byte[] data)
+		{
+			return ComputeCrc(data, InitialValue);
+		}
 
         /// <summary>
         /// Compute the CRC of a block of data.
@@ -16,7 +26,7 @@ namespace OpenPGP.Core
         /// <param name="data">The data to compute the CRC for.</param>
         /// <param name="initialValue">The initial value of the CRC.</param>
         /// <returns>The 24-bit CRC of the <paramref name="data"/>.</returns>
-        public static long ComputeCrc(byte[] data, long initialValue = InitialValue)
+        public static long ComputeCrc(byte[] data, long initialValue)
         {
             if (data == null)
             {

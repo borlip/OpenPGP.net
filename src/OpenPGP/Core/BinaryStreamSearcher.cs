@@ -6,6 +6,17 @@ namespace OpenPGP.Core
     public static class BinaryStreamSearcher
     {
         private const int DefaultBufferSize = 32768;
+		
+        /// <summary>
+        /// Returns the index of a string in a stream.
+        /// </summary>
+        /// <param name="stream">The stream.</param>
+        /// <param name="searchString">The search string.</param>
+        /// <returns>The index of the string; -1 if nothing found.</returns>
+		public static int IndexOfString(Stream stream, string searchString)
+		{
+			return IndexOfString(stream, searchString, DefaultBufferSize);
+		}
 
         /// <summary>
         /// Returns the index of a string in a stream.
@@ -14,7 +25,7 @@ namespace OpenPGP.Core
         /// <param name="searchString">The search string.</param>
         /// <param name="bufferSize">Size of the buffer.</param>
         /// <returns>The index of the string; -1 if nothing found.</returns>
-        public static int IndexOfString(Stream stream, string searchString, int bufferSize = DefaultBufferSize)
+        public static int IndexOfString(Stream stream, string searchString, int bufferSize)
         {
             if ((bufferSize & 1) == 1)
             {
