@@ -86,11 +86,6 @@ namespace OpenPGPTestingHelpers
             Assert.False(string.IsNullOrEmpty(item), "Expected value that is not null and is not empty");
         }
 
-        public static void ShouldNotBeNullEmptyOrWhiteSpace(this string item)
-        {
-            Assert.False(string.IsNullOrWhiteSpace(item), "Expected value that is not null and is not empty and is not whitespace");
-        }
-
         public static void ShouldStartWith(this string item, string expectedText)
         {
             Assert.True(item.StartsWith(expectedText));

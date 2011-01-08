@@ -12,7 +12,7 @@ namespace OpenPGPTestingHelpers
             {
                 throw new ArgumentNullException("assembly");
             }
-            if (string.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrEmpty(name))
             {
                 throw new ArgumentException("name cannot be null or empty", "name");
             }
@@ -33,7 +33,7 @@ namespace OpenPGPTestingHelpers
             {
                 throw new ArgumentNullException("assembly");
             }
-            if (string.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrEmpty(name))
             {
                 throw new ArgumentException("name cannot be null or empty", "name");
             }
@@ -56,7 +56,7 @@ namespace OpenPGPTestingHelpers
             {
                 throw new ArgumentNullException("assembly");
             }
-            if (string.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrEmpty(name))
             {
                 throw new ArgumentException("name cannot be null or empty", "name");
             }

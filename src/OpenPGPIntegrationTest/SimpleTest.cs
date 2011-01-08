@@ -1,17 +1,16 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Reflection;
-using MbUnit.Framework;
 using OpenPGP;
 using OpenPGPTestingHelpers;
+using Xunit;
+using Xunit.Extensions;
 
 namespace OpenPGPIntegrationTest
 {
-    [TestFixture]
     public class SimpleTest
     {
-        [Test]
-        [Row("BinarySymmetric01.txt.gpg", "Plaintext001.txt", "i have a fever and the only cure is more cowbell")]
+        [Theory]
+        [InlineData("BinarySymmetric01.txt.gpg", "Plaintext001.txt", "i have a fever and the only cure is more cowbell")]
         public void DecryptSymmetric(string ciphertextResourceName, string plaintextResourceName, string passphrase)
         {
             var ciphertext = GetNamedResourceAsByteArray(ciphertextResourceName);
@@ -38,7 +37,7 @@ namespace OpenPGPIntegrationTest
             outputStream.Seek(0, SeekOrigin.Begin);
             outputStream.Read(compare, 0, outputLength);
 
-            Assert.AreElementsEqual(plaintext, compare);
+            Assert2.AreElementsEqual(plaintext, compare);
         }
 
         private static string GetNamedResourceAsString(string name)
@@ -54,7 +53,5 @@ namespace OpenPGPIntegrationTest
                 Assembly.GetExecutingAssembly(),
                 "OpenPGPIntegrationTest.TestData." + name);
         }
-
-
     }
 }
