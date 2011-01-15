@@ -49,6 +49,7 @@
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
     <Compile Include="ArmorType.cs" />
+    <Compile Include="AsciiArmorHeader.cs" />
     <Compile Include="Core\ArmorHelper.cs" />
     <Compile Include="Core\AsciiArmorConstants.cs" />
     <Compile Include="Core\AsciiArmorRemover.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="Core\Crc24Computer.cs" />
     <Compile Include="Core\MultiPrecisionInteger.cs" />
     <Compile Include="Core\PacketTypes.cs" />
+    <Compile Include="PGPContentType.cs" />
     <Compile Include="DecryptResult.cs" />
     <Compile Include="IDecryptionSecretDataProvider.cs" />
     <Compile Include="KeyIdentifier.cs" />
