@@ -60,6 +60,7 @@
     <Compile Include="DecryptResult.cs" />
     <Compile Include="IDecryptionSecretDataProvider.cs" />
     <Compile Include="KeyIdentifier.cs" />
+    <Compile Include="PGPException.cs" />
     <Compile Include="PGPTime.cs" />
     <Compile Include="Security\Cryptography\Camellia.cs" />
     <Compile Include="Simple.cs" />
