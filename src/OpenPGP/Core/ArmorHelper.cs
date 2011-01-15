@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace OpenPGP.Core
 {
@@ -7,6 +10,23 @@ namespace OpenPGP.Core
     /// </summary>
     public static class ArmorHelper
     {
+        private static readonly string[] _StaticHeaderLines =
+            new string[]
+                {
+                    AsciiArmorConstants.MessageHeaderLine,
+                    AsciiArmorConstants.PrivateKeyBlockHeaderLine,
+                    AsciiArmorConstants.PublicKeyBlockHeaderLine,
+                    AsciiArmorConstants.SignatureHeaderLine
+                };
+
+        private static readonly Regex[] _RegexHeaderLines =
+            new Regex[]
+                {
+                    new Regex(AsciiArmorConstants.MultipartMessageHeaderLinePattern, RegexOptions.IgnoreCase),
+                    new Regex(AsciiArmorConstants.MultipartMessageHeaderLineUnspecifiedPattern, RegexOptions.IgnoreCase)
+                    ,
+                };
+
         /// <summary>
         /// Determines whether the specified stream is ASCII armored.
         /// </summary>
@@ -24,6 +44,22 @@ namespace OpenPGP.Core
                 var position2 = BinaryStreamSearcher.IndexOfString(stream, AsciiArmorConstants.ArmorDetectionString2);
                 return position2 > position1;
             }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Determines whether the specified line is an ASCII armor header line.
+        /// </summary>
+        /// <param name="line">The line to evaluate.</param>
+        /// <returns>
+        /// 	<c>true</c> if the specified line is an ASCII armor header line; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool IsAsciiArmorHeaderLine(string line)
+        {
+            if (_StaticHeaderLines.Contains(line)) return true;
+
+            if (_RegexHeaderLines.Any(x => x.IsMatch(line))) return true;
 
             return false;
         }

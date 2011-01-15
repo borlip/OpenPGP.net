@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using OpenPGP.Core;
 
 namespace OpenPGP
 {
@@ -121,7 +122,7 @@ namespace OpenPGP
         /// <param name="secretDataProvider">The secret data provider.</param>
         /// <returns>A <see cref="DecryptResult" /> indicating the status of the decryption.</returns>
         [CLSCompliant(false)]
-        public static void Decrypt(
+        public static DecryptResult Decrypt(
             string sourceFileName, 
             string destinationFileName, 
             IDecryptionSecretDataProvider secretDataProvider)
@@ -130,7 +131,7 @@ namespace OpenPGP
             {
                 using (var destination = new FileStream(destinationFileName, FileMode.Create, FileAccess.Write, FileShare.None))
                 {
-                    Decrypt(source, destination, secretDataProvider);
+                    return Decrypt(source, destination, secretDataProvider);
                 }
             }
         }
@@ -148,6 +149,16 @@ namespace OpenPGP
             Stream destination,
             IDecryptionSecretDataProvider secretDataProvider)
         {
+            Stream sourceData;
+            if (ArmorHelper.IsAsciiArmored(source))
+            {
+                sourceData = null;
+            }
+            else
+            {
+                sourceData = source;
+            }
+
             return new DecryptResult(false, false, false, null);
         }
 

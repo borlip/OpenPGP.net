@@ -1,6 +1,6 @@
 ﻿namespace OpenPGP.Core
 {
-    public class AsciiArmorRemover
+    public static class AsciiArmorRemover
     {
     }
 }

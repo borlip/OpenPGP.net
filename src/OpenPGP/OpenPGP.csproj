@@ -52,6 +52,7 @@
     <Compile Include="AsciiArmorHeader.cs" />
     <Compile Include="Core\ArmorHelper.cs" />
     <Compile Include="Core\AsciiArmorConstants.cs" />
+    <Compile Include="Core\AsciiArmorReaderStream.cs" />
     <Compile Include="Core\AsciiArmorRemover.cs" />
     <Compile Include="Core\BigEndianBitConverter.cs" />
     <Compile Include="Core\BinaryStreamSearcher.cs" />
@@ -73,7 +74,6 @@
       <Link>CustomDictionary.xml</Link>
     </CodeAnalysisDictionary>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <None Include="..\OpenPGP.snk">
       <Link>OpenPGP.snk</Link>

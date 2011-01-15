@@ -32,5 +32,23 @@ namespace OpenPGPTest.Core
                 }
             }
         }
+
+        [Test]
+        public void IsAsciiArmorHeaderLineShouldReturnTrueIfDataIsAnAsciiArmorHeaderLine()
+        {
+            ArmorHelper.IsAsciiArmorHeaderLine(AsciiArmorConstants.MessageHeaderLine).ShouldBeTrue();
+            ArmorHelper.IsAsciiArmorHeaderLine(AsciiArmorConstants.SignatureHeaderLine).ShouldBeTrue();
+            ArmorHelper.IsAsciiArmorHeaderLine(AsciiArmorConstants.PrivateKeyBlockHeaderLine).ShouldBeTrue();
+            ArmorHelper.IsAsciiArmorHeaderLine(AsciiArmorConstants.PublicKeyBlockHeaderLine).ShouldBeTrue();
+            ArmorHelper.IsAsciiArmorHeaderLine("-----BEGIN PGP MESSAGE, PART 1/3-----").ShouldBeTrue();
+            ArmorHelper.IsAsciiArmorHeaderLine("-----BEGIN PGP MESSAGE, PART 2-----").ShouldBeTrue();
+        }
+
+        [Test]
+        public void IsAsciiArmorHeaderLineShouldReturnFalseIfDataIsNotAnAsciiArmorHeaderLine()
+        {
+            ArmorHelper.IsAsciiArmorHeaderLine("BEGIN PGP MESSAGE").ShouldBeFalse();
+            ArmorHelper.IsAsciiArmorHeaderLine("complete garbage").ShouldBeFalse();
+        }
     }
 }

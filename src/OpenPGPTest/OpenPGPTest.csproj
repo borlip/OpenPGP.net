@@ -48,6 +48,7 @@
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
     <Compile Include="Core\ArmorHelperTest.cs" />
+    <Compile Include="Core\AsciiArmorReaderStreamTest.cs" />
     <Compile Include="Core\BigEndianBitConverterTest.cs" />
     <Compile Include="Core\BinaryStreamSearcherTest.cs" />
     <Compile Include="Core\Crc24ComputerTest.cs" />
@@ -78,7 +79,6 @@
     <EmbeddedResource Include="TestData\Plaintext002.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
