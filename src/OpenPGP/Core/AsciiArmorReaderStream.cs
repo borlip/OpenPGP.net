@@ -12,6 +12,7 @@ namespace OpenPGP.Core
         private readonly Stream _InputStream;
         private StreamReader _InputReader;
         private Dictionary<string, string> _Headers;
+        private int _LineNumber;
         private bool _IsEndOfInput;
         private bool _IsDisposed;
 
@@ -143,10 +144,10 @@ namespace OpenPGP.Core
         private int ReadPrimitive(byte[] buffer, int offset, int count)
         {
             var bytesLeft = count;
-            while (bytesLeft > 0 && _IsEndOfInput)
-            {
+            //while (bytesLeft > 0 && _IsEndOfInput)
+            //{
 
-            }
+            //}
 
             return count - bytesLeft; // the total number of bytes read into the buffer
         }
@@ -157,26 +158,74 @@ namespace OpenPGP.Core
             {
                 _InputReader = new StreamReader(_InputStream);
                 _Headers = new Dictionary<string, string>();
+                ReadHeaderLine();
                 ReadHeaders();
-            }
-        }
-
-        private void ReadHeaders()
-        {
-            // find first line of armor
-            string input;
-            while ((input = _InputReader.ReadLine()) != null)
-            {
-                if (IsAsciiArmorHeader(input))
+                if (_IsEndOfInput)
                 {
-                    
+                    throw new PGPException("No data found after ASCII armor headers");
                 }
             }
         }
 
-        private static bool IsAsciiArmorHeader(string input)
+        private void ReadHeaderLine()
         {
-            throw new NotImplementedException();
+            // find first line of armor
+            string input;
+            while ((input = ReadLineFromInputStream()) != null)
+            {
+                if (ArmorHelper.IsAsciiArmorHeaderLine(input))
+                {
+                    return;
+                }
+            }
+
+            throw new PGPException("Unable to locate beginning of ASCII armor");
+        }
+
+        private void ReadHeaders()
+        {
+            string input;
+            while ((input = ReadLineFromInputStream()) != null)
+            {
+                input = input.TrimEnd();
+                if (input.Length == 0) return; // blank line ends headers
+
+                string key, value;
+                if (ArmorHelper.ParseHeader(input, out key, out value))
+                {
+                    AddHeader(key, value);
+                }
+                else
+                {
+                    throw new PGPException(string.Format("Malformed header on line {0}", _LineNumber));
+                }
+            }
+        }
+
+        private string ReadLineFromInputStream()
+        {
+            var input = _InputReader.ReadLine();
+            if (input != null)
+            {
+                _LineNumber++;
+            }
+            else
+            {
+                _IsEndOfInput = true;
+            }
+            return input;
+        }
+
+        private void AddHeader(string key, string value)
+        {
+            if (_Headers.ContainsKey(key))
+            {
+                _Headers[key] = _Headers[key] + value;
+            }
+            else
+            {
+                _Headers.Add(key, value);
+            }
         }
 
         /// <summary>

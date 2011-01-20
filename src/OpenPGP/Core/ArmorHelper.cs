@@ -27,6 +27,8 @@ namespace OpenPGP.Core
                     ,
                 };
 
+        private static readonly Regex _HeaderParserRegex = new Regex("^(?<key>.+): (?<value>.*)$", RegexOptions.IgnoreCase);
+
         /// <summary>
         /// Determines whether the specified stream is ASCII armored.
         /// </summary>
@@ -61,6 +63,28 @@ namespace OpenPGP.Core
 
             if (_RegexHeaderLines.Any(x => x.IsMatch(line))) return true;
 
+            return false;
+        }
+
+        /// <summary>
+        /// Parses a header into key/value components.
+        /// </summary>
+        /// <param name="header">The header.</param>
+        /// <param name="key">The key.</param>
+        /// <param name="value">The value.</param>
+        /// <returns><c>true</c> if the header was parsed successfully; <c>false</c> otherwise.</returns>
+        public static bool ParseHeader(string header, out string key, out string value)
+        {
+            var match = _HeaderParserRegex.Match(header);
+            if (match.Success)
+            {
+                key = match.Groups["key"].Value;
+                value = match.Groups["value"].Value;
+                return true;
+            }
+
+            key = "";
+            value = "";
             return false;
         }
     }

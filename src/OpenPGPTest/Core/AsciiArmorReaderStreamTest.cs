@@ -100,6 +100,5 @@ namespace OpenPGPTest.Core
             armorStream.Headers.ContainsKey(AsciiArmorConstants.VersionHeader).ShouldBeTrue();
             armorStream.Headers[AsciiArmorConstants.VersionHeader].ShouldBe("GnuPG v1.4.11 (MingW32)");
         }
-
     }
 }

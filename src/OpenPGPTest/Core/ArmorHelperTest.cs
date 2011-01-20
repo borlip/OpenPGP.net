@@ -50,5 +50,31 @@ namespace OpenPGPTest.Core
             ArmorHelper.IsAsciiArmorHeaderLine("BEGIN PGP MESSAGE").ShouldBeFalse();
             ArmorHelper.IsAsciiArmorHeaderLine("complete garbage").ShouldBeFalse();
         }
+
+        [Test]
+        public void ParseHeaderShouldReturnTrueIfHeaderIsParsed()
+        {
+            RunParseHeaderTest("Version: Something", "Version", "Something");
+            RunParseHeaderTest("ABC: 123", "ABC", "123");
+            RunParseHeaderTest("A-B: ", "A-B", "");
+        }
+
+        private static void RunParseHeaderTest(string header, string expectedKey, string expectedValue)
+        {
+            string actualKey, actualValue;
+
+            ArmorHelper.ParseHeader(header, out actualKey, out actualValue).ShouldBeTrue();
+            actualKey.ShouldBe(expectedKey);
+            actualValue.ShouldBe(expectedValue);
+        }
+
+        [Test]
+        public void ParseHeaderShouldReturnFalseIfHeaderIsNotParsed()
+        {
+            string actualKey, actualValue;
+
+            ArmorHelper.ParseHeader("No value", out actualKey, out actualValue).ShouldBeFalse();
+            ArmorHelper.ParseHeader(": Value no key", out actualKey, out actualValue).ShouldBeFalse();
+        }
     }
 }
