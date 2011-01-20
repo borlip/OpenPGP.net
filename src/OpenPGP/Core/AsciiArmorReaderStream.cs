@@ -144,10 +144,18 @@ namespace OpenPGP.Core
         private int ReadPrimitive(byte[] buffer, int offset, int count)
         {
             var bytesLeft = count;
-            //while (bytesLeft > 0 && _IsEndOfInput)
-            //{
-
-            //}
+            while (bytesLeft > 0 && !_IsEndOfInput)
+            {
+                var input = ReadLineFromInputStream();
+                if (_IsEndOfInput)
+                {
+                    throw new PGPException("Unexpected end of ASCII armor file");
+                }
+                if (input.StartsWith(AsciiArmorConstants.ArmorLinePrefix))
+                {
+                    break;
+                }
+            }
 
             return count - bytesLeft; // the total number of bytes read into the buffer
         }

@@ -111,11 +111,9 @@ namespace OpenPGPTest.Core
 
         private static void RunHeaderReadTest(string resourceName, int expectedHeaderCount, IEnumerable<KeyValuePair<string, string>> expectedHeaders)
         {
-            var input = GetTestDataAsStream(resourceName);
-            var armorStream = new AsciiArmorReaderStream(input);
-            var buffer = new byte[8];
+            var armorStream = CreateAsciiArmorReaderStreamFromResource(resourceName);
 
-            armorStream.Read(buffer, 0, 1);
+            ReadSingleByteFromStream(armorStream);
 
             armorStream.Headers.Count.ShouldBe(expectedHeaderCount);
 
@@ -136,11 +134,30 @@ namespace OpenPGPTest.Core
 
         private static void RunNotArmoredTest(string resourceName)
         {
-            var input = GetTestDataAsStream(resourceName);
-            var armorStream = new AsciiArmorReaderStream(input);
-            var buffer = new byte[8];
+            var armorStream = CreateAsciiArmorReaderStreamFromResource(resourceName);
+            ReadSingleByteFromStream(armorStream);
+        }
 
+        [Test]
+        [ExpectedException(typeof(PGPException))]
+        public void ReadShouldThrowExceptionOnUnexpectedEndOfData()
+        {
+            var armorStream = CreateAsciiArmorReaderStreamFromResource("UnexpectedEndOfArmor.txt.asc");
+
+            ReadSingleByteFromStream(armorStream);
+        }
+
+        private static AsciiArmorReaderStream CreateAsciiArmorReaderStreamFromResource(string resourceName)
+        {
+            var input = GetTestDataAsStream(resourceName);
+            return new AsciiArmorReaderStream(input);
+        }
+
+        private static void ReadSingleByteFromStream(AsciiArmorReaderStream armorStream)
+        {
+            var buffer = new byte[8];
             armorStream.Read(buffer, 0, 1);
         }
+
     }
 }
