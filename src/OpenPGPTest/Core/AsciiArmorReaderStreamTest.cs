@@ -127,10 +127,16 @@ namespace OpenPGPTest.Core
         }
 
         [Test]
-        [ExpectedException(typeof(PGPException))]
         public void ReadShouldThrowExceptionIfNotArmored()
         {
-            var input = GetTestDataAsStream("Plaintext001.txt");
+            Assert2.ShouldThrow<PGPException>(() => RunNotArmoredTest("Plaintext001.txt"));
+            Assert2.ShouldThrow<PGPException>(() => RunNotArmoredTest("Plaintext002.txt"));
+            Assert2.ShouldThrow<PGPException>(() => RunNotArmoredTest("Plaintext003.txt"));
+        }
+
+        private static void RunNotArmoredTest(string resourceName)
+        {
+            var input = GetTestDataAsStream(resourceName);
             var armorStream = new AsciiArmorReaderStream(input);
             var buffer = new byte[8];
 
