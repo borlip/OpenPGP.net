@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 using OpenPGP.Core;
@@ -90,15 +91,38 @@ namespace OpenPGPTest.Core
         [Test]
         public void ReadShouldLoadHeadersOnFirstRead()
         {
-            var input = GetTestDataAsStream("ArmoredSymmetric01.txt.asc");
+            RunHeaderReadTest("ArmoredSymmetric01.txt.asc", 1,
+                              new[]
+                                  {
+                                      new KeyValuePair<string, string>(
+                                          AsciiArmorConstants.VersionHeader,
+                                          "GnuPG v1.4.11 (MingW32)")
+                                  });
+
+            RunHeaderReadTest("ArmoredSymmetric02.txt.asc", 2,
+                              new[]
+                                  {
+                                      new KeyValuePair<string, string>(
+                                          AsciiArmorConstants.CommentHeader,
+                                          "This is a comment")
+                                  });
+        }
+
+        private static void RunHeaderReadTest(string resourceName, int expectedHeaderCount, IEnumerable<KeyValuePair<string, string>> expectedHeaders)
+        {
+            var input = GetTestDataAsStream(resourceName);
             var armorStream = new AsciiArmorReaderStream(input);
             var buffer = new byte[8];
 
             armorStream.Read(buffer, 0, 1);
 
-            armorStream.Headers.Count.ShouldBe(1);
-            armorStream.Headers.ContainsKey(AsciiArmorConstants.VersionHeader).ShouldBeTrue();
-            armorStream.Headers[AsciiArmorConstants.VersionHeader].ShouldBe("GnuPG v1.4.11 (MingW32)");
+            armorStream.Headers.Count.ShouldBe(expectedHeaderCount);
+
+            foreach (var header in expectedHeaders)
+            {
+                armorStream.Headers.ContainsKey(header.Key).ShouldBeTrue();
+                armorStream.Headers[header.Key].ShouldBe(header.Value);
+            }
         }
     }
 }
