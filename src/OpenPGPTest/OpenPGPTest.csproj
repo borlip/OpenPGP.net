@@ -65,7 +65,10 @@
       <Name>OpenPGP</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\ArmoredSymmetric02.txt.asc" />
+    <EmbeddedResource Include="TestData\ArmoredSymmetric03.txt.asc" />
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="TestData\Plaintext001.txt" />
   </ItemGroup>
