@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
+using OpenPGP;
 using OpenPGP.Core;
 using OpenPGPTestingHelpers;
 
@@ -123,6 +124,17 @@ namespace OpenPGPTest.Core
                 armorStream.Headers.ContainsKey(header.Key).ShouldBeTrue();
                 armorStream.Headers[header.Key].ShouldBe(header.Value);
             }
+        }
+
+        [Test]
+        [ExpectedException(typeof(PGPException))]
+        public void ReadShouldThrowExceptionIfNotArmored()
+        {
+            var input = GetTestDataAsStream("Plaintext001.txt");
+            var armorStream = new AsciiArmorReaderStream(input);
+            var buffer = new byte[8];
+
+            armorStream.Read(buffer, 0, 1);
         }
     }
 }
