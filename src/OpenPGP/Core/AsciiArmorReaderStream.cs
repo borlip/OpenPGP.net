@@ -9,9 +9,12 @@ namespace OpenPGP.Core
     /// </summary>
     public class AsciiArmorReaderStream : Stream
     {
+        private const int BufferSize = 16384;
+
+        private Dictionary<string, string> _Headers = new Dictionary<string, string>();
+
         private readonly Stream _InputStream;
         private StreamReader _InputReader;
-        private Dictionary<string, string> _Headers;
         private int _LineNumber;
         private bool _IsEndOfInput;
         private bool _IsDisposed;
@@ -144,6 +147,7 @@ namespace OpenPGP.Core
         private int ReadPrimitive(byte[] buffer, int offset, int count)
         {
             var bytesLeft = count;
+
             while (bytesLeft > 0 && !_IsEndOfInput)
             {
                 var input = ReadLineFromInputStream();
@@ -151,10 +155,16 @@ namespace OpenPGP.Core
                 {
                     throw new PGPException("Unexpected end of ASCII armor file");
                 }
-                if (input.StartsWith(AsciiArmorConstants.ArmorLinePrefix))
+                if (input.StartsWith(AsciiArmorConstants.ChecksumPrefix))
                 {
                     break;
                 }
+                if (input.StartsWith(AsciiArmorConstants.ArmorLinePrefix))
+                {
+                    throw new PGPException("End of armor reached found before checksum");
+                }
+
+                //var decodedBytes = Convert.FromBase64String(input);
             }
 
             return count - bytesLeft; // the total number of bytes read into the buffer
@@ -165,7 +175,6 @@ namespace OpenPGP.Core
             if (_InputReader == null)
             {
                 _InputReader = new StreamReader(_InputStream);
-                _Headers = new Dictionary<string, string>();
                 ReadHeaderLine();
                 ReadHeaders();
                 if (_IsEndOfInput)

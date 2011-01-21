@@ -147,6 +147,48 @@ namespace OpenPGPTest.Core
             ReadSingleByteFromStream(armorStream);
         }
 
+        /// <summary>
+        /// This test verifies that the CLR function System.Convert.FromBase64String. Examples taken from http://tools.ietf.org/html/rfc4880#section-6.5
+        /// </summary>
+        [Test]
+        public void VerifyClrCorrectlyDecodesRadix64()
+        {
+            Assert2.AreElementsEqual(StringToBytesConverter.ConvertToByteArray("14FB9C03D97E"), Convert.FromBase64String("FPucA9l+"));
+            Assert2.AreElementsEqual(StringToBytesConverter.ConvertToByteArray("14FB9C03D9"), Convert.FromBase64String("FPucA9k="));
+            Assert2.AreElementsEqual(StringToBytesConverter.ConvertToByteArray("14FB9C03"), Convert.FromBase64String("FPucAw=="));
+        }
+
+        [Test]
+        [ExpectedException(typeof(FormatException))]
+        public void VerifyClrThrowsFormatExceptionOnBadData()
+        {
+            Convert.FromBase64String("<CompleteGarbage>");
+        }
+
+        [Test]
+        public void ReadShouldReadBytesFromInputAndReturnBytesRead()
+        {
+            
+        }
+
+        [Test]
+        public void ReadShouldReturnActualNumberOfBytesReadWhenInsufficientInputsBytesAreAvailable()
+        {
+            
+        }
+
+        [Test]
+        public void ReadShouldReturnZeroIfNoMoreInputBytesAreAvailable()
+        {
+            
+        }
+
+        [Test]
+        public void ReadShouldThrowPGPExceptionIfInputDataIsNotRadix64()
+        {
+            
+        }
+
         private static AsciiArmorReaderStream CreateAsciiArmorReaderStreamFromResource(string resourceName)
         {
             var input = GetTestDataAsStream(resourceName);
