@@ -46,6 +46,20 @@ namespace OpenPGPTestingHelpers
             }
         }
 
+        public static void AreBytesEqual(byte[] expected, int expectedOffset, byte[] actual, int actualOffset, int count)
+        {
+            Assert.LessOrEqual(expectedOffset + count, expected.Length);
+            Assert.LessOrEqual(actualOffset + count, actual.Length);
+
+            for (var i = 0; i < count; ++i)
+            {
+                var expectedPosition = expectedOffset + i;
+                var actualPosition = actualOffset + i;
+                Assert.AreEqual(expected[expectedPosition], actual[actualPosition],
+                                "expected[{0}] does not equal actual[{1}]", expectedPosition, actualPosition);
+            }
+        }
+
         public static void ShouldThrow<T>(Action action) where T : Exception
         {
             try
