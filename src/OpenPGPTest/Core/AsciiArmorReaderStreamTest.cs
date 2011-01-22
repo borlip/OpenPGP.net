@@ -73,6 +73,13 @@ namespace OpenPGPTest.Core
             CreateEmptyStream().Read(new byte[8], 0, -1);
         }
 
+        [Test]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ReadShouldThrowExceptionIfAmountToReadExceedsBufferLength()
+        {
+            CreateEmptyStream().Read(new byte[8], 4, 8);
+        }
+
         private static AsciiArmorReaderStream CreateEmptyStream()
         {
             return new AsciiArmorReaderStream(new MemoryStream());

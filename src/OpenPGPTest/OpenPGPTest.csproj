@@ -52,6 +52,7 @@
     <Compile Include="Core\BigEndianBitConverterTest.cs" />
     <Compile Include="Core\BinaryStreamSearcherTest.cs" />
     <Compile Include="Core\Crc24ComputerTest.cs" />
+    <Compile Include="Core\SimpleByteBufferTest.cs" />
     <Compile Include="PGPTimeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

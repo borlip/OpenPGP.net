@@ -59,6 +59,7 @@
     <Compile Include="Core\Crc24Computer.cs" />
     <Compile Include="Core\MultiPrecisionInteger.cs" />
     <Compile Include="Core\PacketTypes.cs" />
+    <Compile Include="Core\SimpleByteBuffer.cs" />
     <Compile Include="PGPContentType.cs" />
     <Compile Include="DecryptResult.cs" />
     <Compile Include="IDecryptionSecretDataProvider.cs" />
