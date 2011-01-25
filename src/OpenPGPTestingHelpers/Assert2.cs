@@ -73,5 +73,23 @@ namespace OpenPGPTestingHelpers
 
             Assert.Fail("Expected {0} to be thrown", typeof(T).ToString());
         }
+
+        public static void ShouldThrow<T>(Action action, string message) where T : Exception
+        {
+            try
+            {
+                action();
+            }
+            catch (T ex)
+            {
+                if (ex.Message != message)
+                {
+                    Assert.Fail("Expected exception with message '{0}' but got '{1}'", message, ex.Message);
+                }
+                return;
+            }
+
+            Assert.Fail("Expected {0} to be thrown", typeof(T).ToString());
+        }
     }
 }
