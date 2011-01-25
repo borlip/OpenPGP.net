@@ -11,12 +11,15 @@ namespace OpenPGP.Core
     {
         private const int BufferSize = 16384;
 
-        private Dictionary<string, string> _Headers = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> _Headers = new Dictionary<string, string>();
+        private readonly SimpleByteBuffer _Buffer = new SimpleByteBuffer();
 
         private readonly Stream _InputStream;
         private StreamReader _InputReader;
         private int _LineNumber;
         private bool _IsEndOfInput;
+        private long _ComputedCrc = Crc24Computer.InitializeCrc();
+        private MemoryStream _OutputStream;
         private bool _IsDisposed;
 
         /// <summary>
@@ -30,7 +33,6 @@ namespace OpenPGP.Core
                 throw new ArgumentNullException("inputStream");
             }
             _InputStream = inputStream;
-            _Headers = new Dictionary<string, string>();
         }
 
         /// <summary>
@@ -141,33 +143,7 @@ namespace OpenPGP.Core
             }
 
             EnsureReaderInitialized();
-            return ReadPrimitive(buffer, offset, count);
-        }
-
-        private int ReadPrimitive(byte[] buffer, int offset, int count)
-        {
-            var bytesLeft = count;
-
-            while (bytesLeft > 0 && !_IsEndOfInput)
-            {
-                var input = ReadLineFromInputStream();
-                if (_IsEndOfInput)
-                {
-                    throw new PGPException("Unexpected end of ASCII armor file");
-                }
-                if (input.StartsWith(AsciiArmorConstants.ChecksumPrefix))
-                {
-                    break;
-                }
-                if (input.StartsWith(AsciiArmorConstants.ArmorLinePrefix))
-                {
-                    throw new PGPException("End of armor reached found before checksum");
-                }
-
-                //var decodedBytes = Convert.FromBase64String(input);
-            }
-
-            return count - bytesLeft; // the total number of bytes read into the buffer
+            return _OutputStream.Read(buffer, 0, count);
         }
 
         private void EnsureReaderInitialized()
@@ -181,6 +157,8 @@ namespace OpenPGP.Core
                 {
                     throw new PGPException("No data found after ASCII armor headers");
                 }
+
+                ReadDataIntoMemoryStream();
             }
         }
 
@@ -219,6 +197,74 @@ namespace OpenPGP.Core
             }
         }
 
+        private void AddHeader(string key, string value)
+        {
+            if (_Headers.ContainsKey(key))
+            {
+                _Headers[key] = _Headers[key] + value;
+            }
+            else
+            {
+                _Headers.Add(key, value);
+            }
+        }
+
+        private void ReadDataIntoMemoryStream()
+        {
+            _OutputStream = new MemoryStream();
+            while (true)
+            {
+                var input = ReadLineFromInputStream();
+                if (_IsEndOfInput)
+                {
+                    throw new PGPException("Unexpected end of ASCII armor file");
+                }
+                if (input.StartsWith(AsciiArmorConstants.ChecksumPrefix))
+                {
+                    ProcessCrcLine(input);
+                    break;
+                }
+                if (input.StartsWith(AsciiArmorConstants.ArmorLinePrefix))
+                {
+                    throw new PGPException("End of armor reached before checksum");
+                }
+
+                var decoded = ConvertFromBase64(input);
+                _ComputedCrc = Crc24Computer.ComputeCrc(decoded, _ComputedCrc);
+                _OutputStream.Write(decoded, 0, decoded.Length);
+            }
+            _OutputStream.Seek(0, SeekOrigin.Begin);
+        }
+
+        private void ProcessCrcLine(string input)
+        {
+            if (input.Length != 5)
+            {
+                throw new PGPException(string.Format("CRC on line {0} should be 5 characters long. It is {1} characters long.", _LineNumber, input.Length));
+            }
+            var crcBytes = ConvertFromBase64(input.Substring(1));
+            var bytesToConvert = new byte[4];
+            bytesToConvert[0] = 0;
+            Buffer.BlockCopy(crcBytes, 0, bytesToConvert, 1, 3);
+            var crc = BigEndianBitConverter.ToUInt32(bytesToConvert, 0);
+            if (crc != _ComputedCrc)
+            {
+                throw new PGPException("Bad CRC");
+            }
+        }
+
+        private byte[] ConvertFromBase64(string input)
+        {
+            try
+            {
+                return Convert.FromBase64String(input);
+            }
+            catch (FormatException)
+            {
+                throw new PGPException(string.Format("Data on line {0} is not valid", _LineNumber));
+            }
+        }
+
         private string ReadLineFromInputStream()
         {
             var input = _InputReader.ReadLine();
@@ -231,18 +277,6 @@ namespace OpenPGP.Core
                 _IsEndOfInput = true;
             }
             return input;
-        }
-
-        private void AddHeader(string key, string value)
-        {
-            if (_Headers.ContainsKey(key))
-            {
-                _Headers[key] = _Headers[key] + value;
-            }
-            else
-            {
-                _Headers.Add(key, value);
-            }
         }
 
         /// <summary>

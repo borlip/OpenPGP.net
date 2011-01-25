@@ -134,9 +134,9 @@ namespace OpenPGPTest.Core
         [Test]
         public void ReadShouldThrowExceptionIfNotArmored()
         {
-            Assert2.ShouldThrow<PGPException>(() => RunNotArmoredTest("Plaintext001.txt"));
-            Assert2.ShouldThrow<PGPException>(() => RunNotArmoredTest("Plaintext002.txt"));
-            Assert2.ShouldThrow<PGPException>(() => RunNotArmoredTest("Plaintext003.txt"));
+            Assert2.ShouldThrow<PGPException>(() => RunNotArmoredTest("Plaintext001.txt"), "Unable to locate beginning of ASCII armor");
+            Assert2.ShouldThrow<PGPException>(() => RunNotArmoredTest("Plaintext002.txt"), "Unable to locate beginning of ASCII armor");
+            Assert2.ShouldThrow<PGPException>(() => RunNotArmoredTest("Plaintext003.txt"), "Unable to locate beginning of ASCII armor");
         }
 
         private static void RunNotArmoredTest(string resourceName)
@@ -146,7 +146,7 @@ namespace OpenPGPTest.Core
         }
 
         [Test]
-        [ExpectedException(typeof(PGPException))]
+        [ExpectedException(typeof(PGPException), ExpectedMessage = "Unexpected end of ASCII armor file")]
         public void ReadShouldThrowExceptionOnUnexpectedEndOfData()
         {
             var armorStream = CreateAsciiArmorReaderStreamFromResource("UnexpectedEndOfArmor.txt.asc");
@@ -173,27 +173,68 @@ namespace OpenPGPTest.Core
         }
 
         [Test]
+        [ExpectedException(typeof(PGPException), ExpectedMessage = "Bad CRC")]
+        public void ReadShouldThrowExceptionIfCrcIsBad()
+        {
+            var armorStream = CreateAsciiArmorReaderStreamFromResource("CrcBad.txt.asc");
+            ReadSingleByteFromStream(armorStream);
+        }
+
+        [Test]
+        [ExpectedException(typeof(PGPException), ExpectedMessage = "should be 5 characters long", MatchType = MessageMatch.Contains)]
+        public void ReadShouldThrowExceptionIfCrcIsWrongLength()
+        {
+            var armorStream = CreateAsciiArmorReaderStreamFromResource("CrcWrongLength.txt.asc");
+            ReadSingleByteFromStream(armorStream);
+        }
+
+        [Test]
+        [ExpectedException(typeof(PGPException), ExpectedMessage = "is not valid", MatchType = MessageMatch.Contains)]
+        public void ReadShouldThrowExceptionIfCrcIsNotRadix64()
+        {
+            var armorStream = CreateAsciiArmorReaderStreamFromResource("CrcNotRadix64.txt.asc");
+            ReadSingleByteFromStream(armorStream);
+        }
+
+        [Test]
         public void ReadShouldReadBytesFromInputAndReturnBytesRead()
         {
-            
+            RunReadTest("ArmoredSymmetric01");
+            RunReadTest("ArmoredSymmetric02");
+            RunReadTest("ArmoredSymmetric03");
         }
 
-        [Test]
-        public void ReadShouldReturnActualNumberOfBytesReadWhenInsufficientInputsBytesAreAvailable()
+        private static void RunReadTest(string resourcePrefix)
         {
-            
+            const int BufferSize = 64;
+
+            var armorStream = CreateAsciiArmorReaderStreamFromResource(resourcePrefix + ".txt.asc");
+            var binaryStream = GetTestDataAsStream(resourcePrefix + ".bin");
+
+            var armorBuffer = new byte[BufferSize];
+            var binaryBuffer = new byte[BufferSize];
+            var armorBytesRead = armorStream.Read(armorBuffer, 0, BufferSize);
+            var binaryBytesRead = binaryStream.Read(binaryBuffer, 0, BufferSize);
+            Assert2.AreBytesEqual(binaryBuffer, 0, armorBuffer, 0, binaryBytesRead);
+            armorBytesRead.ShouldBe(binaryBytesRead);
+            while (armorBytesRead == BufferSize)
+            {
+                armorBytesRead = armorStream.Read(armorBuffer, 0, BufferSize);
+                binaryBytesRead = binaryStream.Read(binaryBuffer, 0, BufferSize);
+                armorBytesRead.ShouldBe(binaryBytesRead);
+                Assert2.AreBytesEqual(binaryBuffer, 0, armorBuffer, 0, binaryBytesRead);
+            }
+
+            armorBytesRead = armorStream.Read(armorBuffer, 0, BufferSize);
+            armorBytesRead.ShouldBe(0);
         }
 
         [Test]
-        public void ReadShouldReturnZeroIfNoMoreInputBytesAreAvailable()
-        {
-            
-        }
-
-        [Test]
+        [ExpectedException(typeof(PGPException), ExpectedMessage = "is not valid", MatchType = MessageMatch.Contains)]
         public void ReadShouldThrowPGPExceptionIfInputDataIsNotRadix64()
         {
-            
+            var armorStream = CreateAsciiArmorReaderStreamFromResource("DataNotRadix64.txt.asc");
+            ReadSingleByteFromStream(armorStream);
         }
 
         private static AsciiArmorReaderStream CreateAsciiArmorReaderStreamFromResource(string resourceName)
