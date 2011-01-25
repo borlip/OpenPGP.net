@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace OpenPGP.Core
 {
@@ -27,7 +28,7 @@ namespace OpenPGP.Core
         {
             if (bufferSize < MinimumBufferSize)
             {
-                throw new ArgumentOutOfRangeException("bufferSize", string.Format("bufferSize must be >= {0}", MinimumBufferSize));
+                throw new ArgumentOutOfRangeException("bufferSize", string.Format(CultureInfo.CurrentCulture, "bufferSize must be >= {0}", MinimumBufferSize));
             }
             BufferSize = bufferSize;
             _Buffer = new byte[BufferSize];
@@ -79,7 +80,7 @@ namespace OpenPGP.Core
             }
             if (offset + count > data.Length)
             {
-                throw new ArgumentException(string.Format("The sum of offset and count is larger than the data length"));
+                throw new ArgumentException("The sum of offset and count is larger than the data length");
             }
 
             if (WritePosition + count > BufferSize)
@@ -113,7 +114,7 @@ namespace OpenPGP.Core
             }
             if (offset + count > destination.Length)
             {
-                throw new ArgumentException(string.Format("The sum of offset and count is larger than the destination length"));
+                throw new ArgumentException("The sum of offset and count is larger than the destination length");
             }
 
             var bytesToRead = count;

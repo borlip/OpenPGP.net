@@ -3,7 +3,7 @@
     /// <summary>
     /// Packet types as specified in RFC 4880 at http://tools.ietf.org/html/rfc4880#section-4.3
     /// </summary>
-    public class PacketTypes
+    public static class PacketTypes
     {
         public const int Reserved = 0;
         public const int PublicKeyEncryptedSessionKey = 1;

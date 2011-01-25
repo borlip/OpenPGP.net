@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 
 namespace OpenPGP.Core
@@ -11,31 +12,40 @@ namespace OpenPGP.Core
         /// Returns the index of a string in a stream.
         /// </summary>
         /// <param name="stream">The stream.</param>
-        /// <param name="searchString">The search string.</param>
+        /// <param name="value">The search string.</param>
         /// <returns>The index of the string; -1 if nothing found.</returns>
-		public static int IndexOfString(Stream stream, string searchString)
+		public static int IndexOfString(Stream stream, string value)
 		{
-			return IndexOfString(stream, searchString, DefaultBufferSize);
+			return IndexOfString(stream, value, DefaultBufferSize);
 		}
 
         /// <summary>
         /// Returns the index of a string in a stream.
         /// </summary>
         /// <param name="stream">The stream.</param>
-        /// <param name="searchString">The search string.</param>
+        /// <param name="value">The search string.</param>
         /// <param name="bufferSize">Size of the buffer.</param>
         /// <returns>The index of the string; -1 if nothing found.</returns>
-        public static int IndexOfString(Stream stream, string searchString, int bufferSize)
+        public static int IndexOfString(Stream stream, string value, int bufferSize)
         {
+            if (stream == null)
+            {
+                throw new ArgumentNullException("stream");
+            }
+            if (string.IsNullOrEmpty(value))
+            {
+                return -1;
+            }
+
             if ((bufferSize & 1) == 1)
             {
                 throw new ArgumentException("Buffer size must be even", "bufferSize");
             }
             var windowSize = bufferSize/2;
-            var searchData = System.Text.Encoding.ASCII.GetBytes(searchString);
+            var searchData = System.Text.Encoding.ASCII.GetBytes(value);
             if (searchData.Length > windowSize)
             {
-                throw new InvalidOperationException(string.Format("Length of data to find ({0}) exceeds window size of {1}", searchData.Length, windowSize));
+                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "Length of data to find ({0}) exceeds window size of {1}", searchData.Length, windowSize));
             }
             var buffer = new byte[DefaultBufferSize];
             buffer.Initialize();

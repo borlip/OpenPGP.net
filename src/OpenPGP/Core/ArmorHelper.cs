@@ -38,6 +38,10 @@ namespace OpenPGP.Core
         /// </returns>
         public static bool IsAsciiArmored(Stream stream)
         {
+            if (stream == null)
+            {
+                throw new ArgumentNullException("stream");
+            }
             stream.Seek(0, SeekOrigin.Begin);
             var position1 = BinaryStreamSearcher.IndexOfString(stream, AsciiArmorConstants.ArmorDetectionString1);
             if (position1 >= 0)

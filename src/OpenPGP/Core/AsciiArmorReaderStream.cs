@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 
 namespace OpenPGP.Core
@@ -50,6 +51,10 @@ namespace OpenPGP.Core
             if (_InputReader != null)
             {
                 _InputReader.Close();
+            }
+            if (_OutputStream != null)
+            {
+                _OutputStream.Close();
             }
             base.Dispose(disposing);
             _IsDisposed = true;
@@ -130,7 +135,7 @@ namespace OpenPGP.Core
             }
             if (offset + count > buffer.Length)
             {
-                throw new ArgumentException(string.Format("The sum of offset and count is larger than the buffer length"));
+                throw new ArgumentException("The sum of offset and count is larger than the buffer length");
             }
 
             // NOOP
@@ -189,7 +194,7 @@ namespace OpenPGP.Core
                 }
                 else
                 {
-                    throw new PGPException(string.Format("Malformed header on line {0}", _LineNumber));
+                    throw new PGPException(string.Format(CultureInfo.CurrentCulture, "Malformed header on line {0}", _LineNumber));
                 }
             }
         }
@@ -216,11 +221,11 @@ namespace OpenPGP.Core
                 {
                     throw new PGPException("Unexpected end of ASCII armor file");
                 }
-                if (input.StartsWith(AsciiArmorConstants.ArmorLinePrefix))
+                if (input.StartsWith(AsciiArmorConstants.ArmorLinePrefix, StringComparison.Ordinal))
                 {
                     throw new PGPException("End of armor reached before checksum");
                 }
-                if (input.StartsWith(AsciiArmorConstants.ChecksumPrefix))
+                if (input.StartsWith(AsciiArmorConstants.ChecksumPrefix, StringComparison.Ordinal))
                 {
                     ProcessCrcLine(input);
                     break;
@@ -245,7 +250,7 @@ namespace OpenPGP.Core
         {
             if (input.Length != 5)
             {
-                throw new PGPException(string.Format("CRC on line {0} should be 5 characters long. It is {1} characters long.", _LineNumber, input.Length));
+                throw new PGPException(string.Format(CultureInfo.CurrentCulture, "CRC on line {0} should be 5 characters long. It is {1} characters long.", _LineNumber, input.Length));
             }
         }
 
@@ -273,7 +278,7 @@ namespace OpenPGP.Core
             }
             catch (FormatException)
             {
-                throw new PGPException(string.Format("Data on line {0} is not valid", _LineNumber));
+                throw new PGPException(string.Format(CultureInfo.CurrentCulture, "Data on line {0} is not valid", _LineNumber));
             }
         }
 
@@ -336,15 +341,57 @@ namespace OpenPGP.Core
             get { return false; }
         }
 
+        /// <summary>
+        /// When overridden in a derived class, gets the length in bytes of the stream.
+        /// </summary>
+        /// <value></value>
+        /// <returns>
+        /// A long value representing the length of the stream in bytes.
+        /// </returns>
+        /// <exception cref="T:System.ObjectDisposedException">
+        /// Methods were called after the stream was closed.
+        /// </exception>
         public override long Length
         {
-            get { throw new NotImplementedException(); }
+            get 
+            {
+                if (_IsDisposed)
+                {
+                    throw new ObjectDisposedException("The stream is closed");
+                }
+                EnsureReaderInitialized();
+                return _OutputStream.Length; 
+            }
         }
 
+        /// <summary>
+        /// Gets or sets the position within the current stream.
+        /// </summary>
+        /// <value></value>
+        /// <returns>
+        /// The current position within the stream.
+        /// </returns>
+        /// <exception cref="T:System.IO.IOException">
+        /// An I/O error occurs.
+        /// </exception>
+        /// <exception cref="T:System.NotSupportedException">
+        /// The stream does not support seeking.
+        /// </exception>
+        /// <exception cref="T:System.ObjectDisposedException">
+        /// Methods were called after the stream was closed.
+        /// </exception>
         public override long Position
         {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
+            get
+            {
+                if (_IsDisposed)
+                {
+                    throw new ObjectDisposedException("The stream is closed");
+                }
+                EnsureReaderInitialized();
+                return _OutputStream.Position;
+            }
+            set { throw new NotSupportedException("Seeking is not supported"); }
         }
     }
 }

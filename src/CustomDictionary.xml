@@ -31,7 +31,10 @@
 
     <Words>
         <Recognized>
+            <Word>AsciiArmorReaderStream</Word>
+            <Word>charset</Word>
             <Word>crc</Word>
+            <Word>multi</Word>
         </Recognized>
         <Compound>
         </Compound>
