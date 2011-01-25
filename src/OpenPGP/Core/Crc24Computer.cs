@@ -9,6 +9,15 @@ namespace OpenPGP.Core
     {
         private const long InitialValue = 0xB704CEL;
         private const long Generator = 0x1864CFBL;
+
+        /// <summary>
+        /// Initializes the CRC.
+        /// </summary>
+        /// <returns>The initial value for the CRC.</returns>
+        public static long InitializeCrc()
+        {
+            return InitialValue;
+        }
 		
         /// <summary>
         /// Compute the CRC of a block of data.
