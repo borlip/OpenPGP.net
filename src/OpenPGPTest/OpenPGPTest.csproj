@@ -85,6 +85,23 @@
   <ItemGroup>
     <EmbeddedResource Include="TestData\UnexpectedEndOfArmor.txt.asc" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\CrcWrongLength.txt.asc" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\CrcBad.txt.asc" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\CrcNotRadix64.txt.asc" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\DataNotRadix64.txt.asc" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\ArmoredSymmetric01.bin" />
+    <EmbeddedResource Include="TestData\ArmoredSymmetric02.bin" />
+    <EmbeddedResource Include="TestData\ArmoredSymmetric03.bin" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
