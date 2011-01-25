@@ -9,10 +9,7 @@ namespace OpenPGP.Core
     /// </summary>
     public class AsciiArmorReaderStream : Stream
     {
-        private const int BufferSize = 16384;
-
         private readonly Dictionary<string, string> _Headers = new Dictionary<string, string>();
-        private readonly SimpleByteBuffer _Buffer = new SimpleByteBuffer();
 
         private readonly Stream _InputStream;
         private StreamReader _InputReader;
@@ -219,38 +216,53 @@ namespace OpenPGP.Core
                 {
                     throw new PGPException("Unexpected end of ASCII armor file");
                 }
+                if (input.StartsWith(AsciiArmorConstants.ArmorLinePrefix))
+                {
+                    throw new PGPException("End of armor reached before checksum");
+                }
                 if (input.StartsWith(AsciiArmorConstants.ChecksumPrefix))
                 {
                     ProcessCrcLine(input);
                     break;
                 }
-                if (input.StartsWith(AsciiArmorConstants.ArmorLinePrefix))
-                {
-                    throw new PGPException("End of armor reached before checksum");
-                }
 
-                var decoded = ConvertFromBase64(input);
-                _ComputedCrc = Crc24Computer.ComputeCrc(decoded, _ComputedCrc);
-                _OutputStream.Write(decoded, 0, decoded.Length);
+                DecodeLine(input);
             }
             _OutputStream.Seek(0, SeekOrigin.Begin);
         }
 
         private void ProcessCrcLine(string input)
         {
-            if (input.Length != 5)
-            {
-                throw new PGPException(string.Format("CRC on line {0} should be 5 characters long. It is {1} characters long.", _LineNumber, input.Length));
-            }
-            var crcBytes = ConvertFromBase64(input.Substring(1));
-            var bytesToConvert = new byte[4];
-            bytesToConvert[0] = 0;
-            Buffer.BlockCopy(crcBytes, 0, bytesToConvert, 1, 3);
-            var crc = BigEndianBitConverter.ToUInt32(bytesToConvert, 0);
+            ValidateCrcLine(input);
+            var crc = GetCrcFromArmor(input);
             if (crc != _ComputedCrc)
             {
                 throw new PGPException("Bad CRC");
             }
+        }
+
+        private void ValidateCrcLine(string input)
+        {
+            if (input.Length != 5)
+            {
+                throw new PGPException(string.Format("CRC on line {0} should be 5 characters long. It is {1} characters long.", _LineNumber, input.Length));
+            }
+        }
+
+        private uint GetCrcFromArmor(string input)
+        {
+            var crcBytes = ConvertFromBase64(input.Substring(1));
+            var bytesToConvert = new byte[4];
+            bytesToConvert[0] = 0;
+            Buffer.BlockCopy(crcBytes, 0, bytesToConvert, 1, 3);
+            return BigEndianBitConverter.ToUInt32(bytesToConvert, 0);
+        }
+
+        private void DecodeLine(string input)
+        {
+            var decoded = ConvertFromBase64(input);
+            _ComputedCrc = Crc24Computer.ComputeCrc(decoded, _ComputedCrc);
+            _OutputStream.Write(decoded, 0, decoded.Length);
         }
 
         private byte[] ConvertFromBase64(string input)
