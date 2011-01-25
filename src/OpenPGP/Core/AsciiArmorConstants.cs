@@ -9,7 +9,7 @@ namespace OpenPGP.Core
     {
         public const string ArmorLinePrefix = "-----";
         public const string ArmorLineSuffix = "-----";
-        public const string ChecksumPrefix = "-";
+        public const string ChecksumPrefix = "=";
         public const string ArmorDetectionString1 = ArmorLinePrefix + "BEGIN PGP ";
         public const string ArmorDetectionString2 = ArmorLinePrefix + "END PGP ";
         public const string MessageHeaderLine = ArmorLinePrefix + "BEGIN PGP MESSAGE" + ArmorLineSuffix;
