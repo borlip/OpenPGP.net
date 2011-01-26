@@ -69,7 +69,7 @@ namespace OpenPGP.Core
         }
 
         /// <summary>
-        /// Not implemented in <see cref="AsciiArmorReaderStream" />.
+        /// Not supported in <see cref="AsciiArmorReaderStream" />.
         /// </summary>
         /// <param name="offset">Not used.</param>
         /// <param name="origin">Not used.</param>
@@ -77,17 +77,17 @@ namespace OpenPGP.Core
         /// <exception cref="InvalidOperationException">All operations.</exception>
         public override long Seek(long offset, SeekOrigin origin)
         {
-            throw new InvalidOperationException("Operation not supported on AsciiArmorReaderStream");
+            throw new NotSupportedException();
         }
 
         /// <summary>
-        /// Not implemented in <see cref="AsciiArmorReaderStream" />.
+        /// Not supported in <see cref="AsciiArmorReaderStream" />.
         /// </summary>
         /// <param name="value">Not used.</param>
         /// <exception cref="InvalidOperationException">All operations.</exception>
         public override void SetLength(long value)
         {
-            throw new InvalidOperationException("Operation not supported on AsciiArmorReaderStream");
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -305,7 +305,7 @@ namespace OpenPGP.Core
         /// <exception cref="InvalidOperationException">All operations.</exception>
         public override void Write(byte[] buffer, int offset, int count)
         {
-            throw new InvalidOperationException("Operation not supported on AsciiArmorReaderStream");
+            throw new NotSupportedException();
         }
 
         /// <summary>

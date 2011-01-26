@@ -21,21 +21,21 @@ namespace OpenPGPTest.Core
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
+        [ExpectedException(typeof(NotSupportedException))]
         public void SeekShouldThrowException()
         {
             CreateEmptyStream().Seek(0, SeekOrigin.Begin);
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
+        [ExpectedException(typeof(NotSupportedException))]
         public void SetLengthShouldThrowException()
         {
             CreateEmptyStream().SetLength(0);
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
+        [ExpectedException(typeof(NotSupportedException))]
         public void WriteShouldThrowException()
         {
             CreateEmptyStream().Write(new byte[8], 0, 1);
