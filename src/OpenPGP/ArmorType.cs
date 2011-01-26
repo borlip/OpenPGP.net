@@ -8,7 +8,7 @@
         /// <summary>
         /// ASCII armor, as specified in RFC 4880 at http://tools.ietf.org/html/rfc4880#section-6.2
         /// </summary>
-        ASCII,
+        Ascii,
 
         /// <summary>
         /// Binary armor.
