@@ -11,7 +11,7 @@ namespace OpenPGP.Core
         private const int MinimumBufferSize = 8;
         private const int DefaultBufferSize = 16384;
 
-        private byte[] _Buffer;
+        private readonly byte[] _Buffer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SimpleByteBuffer"/> class.
