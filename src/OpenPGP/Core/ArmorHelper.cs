@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -27,7 +28,7 @@ namespace OpenPGP.Core
                     ,
                 };
 
-        private static readonly Regex _HeaderParserRegex = new Regex("^(?<key>.+): (?<value>.*)$", RegexOptions.IgnoreCase);
+        private static readonly Regex _HeaderParserRegex = new Regex("^(?<name>.+): (?<value>.*)$", RegexOptions.IgnoreCase);
 
         /// <summary>
         /// Determines whether the specified stream is ASCII armored.
@@ -71,25 +72,18 @@ namespace OpenPGP.Core
         }
 
         /// <summary>
-        /// Parses a header into key/value components.
+        /// Parses a header into name/value components.
         /// </summary>
         /// <param name="header">The header.</param>
-        /// <param name="key">The key.</param>
-        /// <param name="value">The value.</param>
-        /// <returns><c>true</c> if the header was parsed successfully; <c>false</c> otherwise.</returns>
-        public static bool ParseHeader(string header, out string key, out string value)
+        /// <returns><c>null</c> if the header could not be parsed; otherwise, a <see cref="Header" /> object containing the header data.</returns>
+        public static Header ParseHeader(string header)
         {
             var match = _HeaderParserRegex.Match(header);
             if (match.Success)
             {
-                key = match.Groups["key"].Value;
-                value = match.Groups["value"].Value;
-                return true;
+                return new Header {Name = match.Groups["name"].Value, Value = match.Groups["value"].Value};
             }
-
-            key = "";
-            value = "";
-            return false;
+            return null;
         }
     }
 }

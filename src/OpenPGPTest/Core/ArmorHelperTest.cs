@@ -59,22 +59,19 @@ namespace OpenPGPTest.Core
             RunParseHeaderTest("A-B: ", "A-B", "");
         }
 
-        private static void RunParseHeaderTest(string header, string expectedKey, string expectedValue)
+        private static void RunParseHeaderTest(string header, string expectedName, string expectedValue)
         {
-            string actualKey, actualValue;
-
-            ArmorHelper.ParseHeader(header, out actualKey, out actualValue).ShouldBeTrue();
-            actualKey.ShouldBe(expectedKey);
-            actualValue.ShouldBe(expectedValue);
+            var actualHeader = ArmorHelper.ParseHeader(header);
+            actualHeader.ShouldNotBeNull();
+            actualHeader.Name.ShouldBe(expectedName);
+            actualHeader.Value.ShouldBe(expectedValue);
         }
 
         [Test]
         public void ParseHeaderShouldReturnFalseIfHeaderIsNotParsed()
         {
-            string actualKey, actualValue;
-
-            ArmorHelper.ParseHeader("No value", out actualKey, out actualValue).ShouldBeFalse();
-            ArmorHelper.ParseHeader(": Value no key", out actualKey, out actualValue).ShouldBeFalse();
+            ArmorHelper.ParseHeader("No value").ShouldBeNull();
+            ArmorHelper.ParseHeader(": Value no name").ShouldBeNull();
         }
     }
 }

@@ -57,6 +57,7 @@
     <Compile Include="Core\BigEndianBitConverter.cs" />
     <Compile Include="Core\BinaryStreamSearcher.cs" />
     <Compile Include="Core\Crc24Computer.cs" />
+    <Compile Include="Core\Header.cs" />
     <Compile Include="Core\MultiPrecisionInteger.cs" />
     <Compile Include="Core\PacketTypes.cs" />
     <Compile Include="Core\SimpleByteBuffer.cs" />

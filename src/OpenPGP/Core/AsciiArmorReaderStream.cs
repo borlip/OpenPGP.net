@@ -187,10 +187,10 @@ namespace OpenPGP.Core
                 input = input.TrimEnd();
                 if (input.Length == 0) return; // blank line ends headers
 
-                string key, value;
-                if (ArmorHelper.ParseHeader(input, out key, out value))
+                var header = ArmorHelper.ParseHeader(input);
+                if (header != null)
                 {
-                    AddHeader(key, value);
+                    AddHeader(header.Name, header.Value);
                 }
                 else
                 {
